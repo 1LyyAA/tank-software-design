@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
+import ru.mipt.bit.platformer.CollisionManager;
+import ru.mipt.bit.platformer.Directions;
 import ru.mipt.bit.platformer.util.TileMovement;
 
 import static com.badlogic.gdx.math.MathUtils.isEqual;
@@ -26,9 +28,12 @@ public class Tank {
     private float TankRotation;
     private float TankMovementProggress = 1f;
 
+    CollisionManager collisionManager;
 
     // Texture decodes an image file and loads it into GPU memory, it represents a native resource
-    public Tank() {
+    public Tank(CollisionManager collisionManager) {
+        this.collisionManager = collisionManager;
+
         blueTankTexture = new Texture("images/tank_blue.png");
         // TextureRegion represents Texture portion, there may be many TextureRegion instances of the same Texture
         TankGraphics = new TextureRegion(blueTankTexture);
@@ -37,6 +42,8 @@ public class Tank {
         TankDestinationCoordinates = new GridPoint2(1, 1);
         TankCoordinates = new GridPoint2(TankDestinationCoordinates);
         TankRotation = 0f;
+
+        
     }
         
     public void render(Batch batch) {
@@ -83,6 +90,18 @@ public class Tank {
         // если достигли цели, фиксируем координаты
         if (isEqual(TankMovementProggress, 1f)) {
             TankCoordinates.set(TankDestinationCoordinates);
+        }
+    }
+
+
+    public void tryMove(Directions direction) {
+        if (direction != null && isEqual(TankMovementProggress, 1f)) {
+            // проверка столкновений
+            if (collisionManager.canMoveTank(this, direction.dx , direction.dy)) {
+                move(direction.dx, direction.dy);
+                setTankMovementProggress(0f);
+            }
+            setRotation(direction.rotation);
         }
     }
 }
