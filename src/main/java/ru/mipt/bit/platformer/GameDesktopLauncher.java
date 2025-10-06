@@ -19,6 +19,7 @@ import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.objects.Tank;
 import ru.mipt.bit.platformer.objects.Tree;
 import ru.mipt.bit.platformer.util.TileMovement;
+import ru.mipt.bit.platformer.util.InputHandler;
 
 //import static com.badlogic.gdx.Input.Keys.*;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
@@ -56,14 +57,11 @@ public class GameDesktopLauncher implements ApplicationListener {
 
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
-        tank = new Tank();
+        tank = new Tank(collisionManager);
         tree = new Tree("images/greenTree.png", groundLayer, new GridPoint2(1, 3));
         
 
-        collisionManager = new CollisionManager(List.of(tree));
-
-        player = new Player(tank, collisionManager);
-        
+        collisionManager = new CollisionManager(List.of(tree));        
     }
 
     @Override
@@ -72,7 +70,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         // get time passed since the last render
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        player.move();
+        tank.tryMove(InputHandler.getInput());
 
         tank.update(deltaTime, tileMovement);
 
