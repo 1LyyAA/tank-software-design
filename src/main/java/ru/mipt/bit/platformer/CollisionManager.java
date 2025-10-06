@@ -3,8 +3,6 @@ package ru.mipt.bit.platformer;
 import java.util.List;
 
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.Rectangle;
-
 import ru.mipt.bit.platformer.objects.Tree;
 
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
+import ru.mipt.bit.platformer.Directions;
 import ru.mipt.bit.platformer.util.TileMovement;
 
 import static com.badlogic.gdx.math.MathUtils.isEqual;
@@ -85,5 +86,19 @@ public class Tank {
             TankCoordinates.set(TankDestinationCoordinates);
         }
     }
+
+
+    // public void move() {
+    //     for (Directions dir : Directions.values()) {
+    //         if (dir.isPressed() && isEqual(getTankMovementProggress(), 1f)) {
+    //             // проверка столкновений
+    //             if (collisionManager.canMoveTank(this, dir.dx , dir.dy)) {
+    //                 move(dir.dx, dir.dy);
+    //                 setTankMovementProggress(0f);
+    //             }
+    //             setRotation(dir.rotation);
+    //         }
+    //     }
+    // }
 }
 
