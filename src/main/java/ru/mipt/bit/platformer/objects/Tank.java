@@ -95,11 +95,14 @@ public class Tank {
 
 
     public void tryMove(Directions direction) {
-        if (collisionManager.canMoveTank(this, direction.dx, direction.dy)) {
-            move(direction.dx, direction.dy);
-            setTankMovementProggress(0f);
+        if (direction != null && isEqual(TankMovementProggress, 1f)) {
+            // проверка столкновений
+            if (collisionManager.canMoveTank(this, direction.dx , direction.dy)) {
+                move(direction.dx, direction.dy);
+                setTankMovementProggress(0f);
+            }
+            setRotation(direction.rotation);
         }
-        setRotation(direction.rotation);
     }
 }
 

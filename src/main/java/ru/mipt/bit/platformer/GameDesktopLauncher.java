@@ -33,35 +33,34 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     private Batch batch;
 
-    private TiledMap level;
+    //private TiledMap level;
     private MapRenderer levelRenderer;
     private TileMovement tileMovement;
 
+    private Level level;
 
     Tree tree;
     Tank tank;
     CollisionManager collisionManager;
-    Player player;
 
 
 
     @Override
     public void create() {
+        
         batch = new SpriteBatch();
 
         // load level tiles
-        level = new TmxMapLoader().load("level.tmx");
-        levelRenderer = createSingleLayerMapRenderer(level, batch);
+        level = new Level("level.tmx");
 
-        TiledMapTileLayer groundLayer = getSingleLayer(level);
+        levelRenderer = createSingleLayerMapRenderer(level.getMap(), batch);
 
-        tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
+        tileMovement = new TileMovement(level.getGroundLayer(), Interpolation.smooth);
 
-        tank = new Tank(collisionManager);
-        tree = new Tree("images/greenTree.png", groundLayer, new GridPoint2(1, 3));
-        
+        tree = new Tree("images/greenTree.png", level.getGroundLayer(), new GridPoint2(1, 3));
 
-        collisionManager = new CollisionManager(List.of(tree));        
+        collisionManager = new CollisionManager(List.of(tree));
+        tank = new Tank(collisionManager); 
     }
 
     @Override
@@ -71,7 +70,6 @@ public class GameDesktopLauncher implements ApplicationListener {
         float deltaTime = Gdx.graphics.getDeltaTime();
 
         tank.tryMove(InputHandler.getInput());
-
         tank.update(deltaTime, tileMovement);
 
         levelRenderer.render();
@@ -115,7 +113,6 @@ public class GameDesktopLauncher implements ApplicationListener {
         tree.dispose();
         tank.dispose();
         level.dispose();
-
         batch.dispose();
     }
 
