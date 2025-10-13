@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 
-public class Tree {
+public class Tree implements GameObject , Collidable {
     
     private Texture greenTreeTexture;
     private TextureRegion treeObstacleGraphics;
@@ -31,15 +31,17 @@ public class Tree {
         return treeObstacleRectangle;
     }
 
-
+    @Override
     public GridPoint2 getCoordinates() {
         return treeObstacleCoordinates;
     }
 
+    @Override
     public void render(Batch batch) {
         drawTextureRegionUnscaled(batch, treeObstacleGraphics, treeObstacleRectangle, 0f);
     }
 
+    @Override
     public void dispose() {
         greenTreeTexture.dispose();
     }

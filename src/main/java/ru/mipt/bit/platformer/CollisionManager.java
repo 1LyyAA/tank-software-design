@@ -3,37 +3,24 @@ package ru.mipt.bit.platformer;
 import java.util.List;
 
 import com.badlogic.gdx.math.GridPoint2;
-import ru.mipt.bit.platformer.objects.Tree;
+import ru.mipt.bit.platformer.objects.Collidable;
 
-
-import ru.mipt.bit.platformer.objects.Tank;
 
 public class CollisionManager {
-    private List<Tree> trees;
-    //private List<Tank> tanks;
 
-    public CollisionManager(List<Tree> trees) {
-        this.trees = trees;
+    private final List<Collidable> obstacles;
+
+    public CollisionManager(List<Collidable> obstacles) {
+        this.obstacles = obstacles;
     }
 
-    public boolean canMoveTank(Tank tank, int dx, int dy) {
-        // Получаем текущие координаты танка на сетке
-        GridPoint2 currentTankCoordinates = tank.getTankCoordinates();
-        
-        // Вычисляем, на какую клетку танк собирается переместиться
-        GridPoint2 destinationCoordinates = new GridPoint2(
-            currentTankCoordinates.x + dx,
-            currentTankCoordinates.y + dy
-        );
-
-        // Проверяем, совпадает ли целевая клетка с клеткой какого-либо дерева
-        for (Tree tree : trees) {
-            if (tree.getCoordinates().equals(destinationCoordinates)) {
-                return false;
+    public boolean isCellBlocked(GridPoint2 destinationCoordinates) {
+        for (Collidable object : obstacles) {
+            if (object.getCoordinates().equals(destinationCoordinates)) {
+                return true;
             }
         }
-        
-        return true; // Путь свободен
+        return false;
     }
 }
 

@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
 //import com.badlogic.gdx.math.Rectangle;
 
+import ru.mipt.bit.platformer.objects.GameObject;
 import ru.mipt.bit.platformer.objects.Tank;
 import ru.mipt.bit.platformer.objects.Tree;
 import ru.mipt.bit.platformer.util.TileMovement;
@@ -60,7 +61,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         tree = new Tree("images/greenTree.png", level.getGroundLayer(), new GridPoint2(1, 3));
 
         collisionManager = new CollisionManager(List.of(tree));
-        tank = new Tank(collisionManager); 
+        tank = new Tank(collisionManager, tileMovement);
     }
 
     @Override
@@ -70,7 +71,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         float deltaTime = Gdx.graphics.getDeltaTime();
 
         tank.tryMove(InputHandler.getInput());
-        tank.update(deltaTime, tileMovement);
+        tank.update(deltaTime);
 
         levelRenderer.render();
 
@@ -110,8 +111,10 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void dispose() {
         // dispose of all the native resources (classes which implement com.badlogic.gdx.utils.Disposable)
-        tree.dispose();
-        tank.dispose();
+        for (GameObject object : List.of(tank, tree)) {
+            object.dispose();
+        }
+        
         level.dispose();
         batch.dispose();
     }
