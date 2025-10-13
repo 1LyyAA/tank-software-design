@@ -16,7 +16,8 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 
-public class Tank {
+public class Tank implements GameObject, Collidable, Movable {
+    TileMovement tileMovement;
     private Texture blueTankTexture;
     private TextureRegion TankGraphics;
     private Rectangle TankRectangle;
@@ -31,8 +32,9 @@ public class Tank {
     CollisionManager collisionManager;
 
     // Texture decodes an image file and loads it into GPU memory, it represents a native resource
-    public Tank(CollisionManager collisionManager) {
+    public Tank(CollisionManager collisionManager, TileMovement tileMovement) {
         this.collisionManager = collisionManager;
+        this.tileMovement = tileMovement;
 
         blueTankTexture = new Texture("images/tank_blue.png");
         // TextureRegion represents Texture portion, there may be many TextureRegion instances of the same Texture
@@ -45,64 +47,82 @@ public class Tank {
 
         
     }
-        
+
+    @Override
     public void render(Batch batch) {
         drawTextureRegionUnscaled(batch, TankGraphics, TankRectangle, TankRotation);
     }
     
 
-    public Rectangle getTankRectangle(){
+    public Rectangle getRectangle(){
         return TankRectangle;
     }
 
-    public GridPoint2 getTankCoordinates() {
+    @Override
+    public GridPoint2 getCoordinates() {
         return TankCoordinates;
     }
 
+    @Override
     public void dispose() {
         blueTankTexture.dispose();
     }
 
-    public void move (float dx, float dy ) {
-        TankDestinationCoordinates.x += dx;
-        TankDestinationCoordinates.y += dy;
-    }
+    // public void move (float dx, float dy ) {
+    //     TankDestinationCoordinates.x += dx;
+    //     TankDestinationCoordinates.y += dy;
+    // }
 
     public void setRotation(float angle) {
         this.TankRotation = angle;
     }
 
-    public float getTankMovementProggress() {
+    public float getMovementProggress() {
         return TankMovementProggress;
     }
 
-    public void setTankMovementProggress(float x) {
+    public void setMovementProggress(float x) {
         TankMovementProggress = x;
     }
 
-    public void update(float deltaTime, TileMovement tileMovement) {
+    @Override
+    public void update(float deltaTime) {
         // обновляем прогресс движения от 0 до 1
         TankMovementProggress = continueProgress(TankMovementProggress, deltaTime, TankSpeed);
 
         // плавное перемещение прямоугольника между тайлами
-        tileMovement.moveRectangleBetweenTileCenters(TankRectangle, TankCoordinates, TankDestinationCoordinates, TankMovementProggress);
+        this.tileMovement.moveRectangleBetweenTileCenters(TankRectangle, TankCoordinates, TankDestinationCoordinates, TankMovementProggress);
 
         // если достигли цели, фиксируем координаты
-        if (isEqual(TankMovementProggress, 1f)) {
+        if (!isMoving()) {
             TankCoordinates.set(TankDestinationCoordinates);
         }
     }
 
-
+    @Override
+    public boolean isMoving() {
+        return !isEqual(TankMovementProggress, 1f);
+    }
+    
+    @Override
     public void tryMove(Directions direction) {
-        if (direction != null && isEqual(TankMovementProggress, 1f)) {
-            // проверка столкновений
-            if (collisionManager.canMoveTank(this, direction.dx , direction.dy)) {
-                move(direction.dx, direction.dy);
-                setTankMovementProggress(0f);
-            }
-            setRotation(direction.rotation);
+        if (isMoving() || direction == null) {
+            return;
         }
+
+        GridPoint2 destinationCoordinates = new GridPoint2(
+                TankCoordinates.x + direction.dx,
+                TankCoordinates.y + direction.dy);
+
+        if (collisionManager.isCellBlocked(destinationCoordinates)) {
+            return;
+        }
+
+        TankDestinationCoordinates.set(destinationCoordinates);
+        setRotation(direction.rotation);
+        // move(direction.dx, direction.dy);
+        setMovementProggress(0f);
+        
     }
 }
 
