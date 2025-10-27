@@ -32,6 +32,11 @@ public class Tank implements GameObject, Collidable, Movable {
     CollisionManager collisionManager;
 
     // Texture decodes an image file and loads it into GPU memory, it represents a native resource
+
+    public static Tank makeTankAtTile(CollisionManager collisionManager, TileMovement tileMovement) {
+        return new Tank(collisionManager, tileMovement);
+    }
+
     public Tank(CollisionManager collisionManager, TileMovement tileMovement) {
         this.collisionManager = collisionManager;
         this.tileMovement = tileMovement;
@@ -122,7 +127,10 @@ public class Tank implements GameObject, Collidable, Movable {
         setRotation(direction.rotation);
         // move(direction.dx, direction.dy);
         setMovementProggress(0f);
-        
+    }
+
+    public void setTankCoordinates(GridPoint2 tankCoordinates) {
+        TankCoordinates = tankCoordinates;
     }
 }
 

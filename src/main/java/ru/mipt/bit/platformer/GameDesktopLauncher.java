@@ -9,9 +9,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 //import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
 //import com.badlogic.gdx.math.Rectangle;
@@ -26,42 +23,27 @@ import ru.mipt.bit.platformer.util.InputHandler;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 //import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
+import static ru.mipt.bit.platformer.LevelBuilder.createLevel;
 
+
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameDesktopLauncher implements ApplicationListener {
 
-
     private Batch batch;
-
-    //private TiledMap level;
     private MapRenderer levelRenderer;
-    private TileMovement tileMovement;
-
     private Level level;
-
-    Tree tree;
-    Tank tank;
-    CollisionManager collisionManager;
-
-
 
     @Override
     public void create() {
         
         batch = new SpriteBatch();
-
-        // load level tiles
-        level = new Level("level.tmx");
+        level = createLevel("level.tmx", "src/main/resources/images/level.txt");
 
         levelRenderer = createSingleLayerMapRenderer(level.getMap(), batch);
 
-        tileMovement = new TileMovement(level.getGroundLayer(), Interpolation.smooth);
-
-        tree = new Tree("images/greenTree.png", level.getGroundLayer(), new GridPoint2(1, 3));
-
-        collisionManager = new CollisionManager(List.of(tree));
-        tank = new Tank(collisionManager, tileMovement);
     }
 
     @Override
@@ -70,8 +52,8 @@ public class GameDesktopLauncher implements ApplicationListener {
         // get time passed since the last render
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        tank.tryMove(InputHandler.getInput());
-        tank.update(deltaTime);
+        level.getTank().tryMove(InputHandler.getInput());
+        level.getTank().update(deltaTime);
 
         levelRenderer.render();
 
@@ -79,10 +61,12 @@ public class GameDesktopLauncher implements ApplicationListener {
         batch.begin();
 
         // render player
-        tank.render(batch);
+        level.getTank().render(batch);
 
         // render tree obstacle
-        tree.render(batch);
+        for (Tree tree : level.getTrees()) {
+            tree.render(batch);
+        }
 
         // submit all drawing requests
         batch.end();
@@ -111,10 +95,6 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void dispose() {
         // dispose of all the native resources (classes which implement com.badlogic.gdx.utils.Disposable)
-        for (GameObject object : List.of(tank, tree)) {
-            object.dispose();
-        }
-        
         level.dispose();
         batch.dispose();
     }

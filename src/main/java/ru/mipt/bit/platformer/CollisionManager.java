@@ -1,5 +1,6 @@
 package ru.mipt.bit.platformer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.math.GridPoint2;
@@ -10,8 +11,8 @@ public class CollisionManager {
 
     private final List<Collidable> obstacles;
 
-    public CollisionManager(List<Collidable> obstacles) {
-        this.obstacles = obstacles;
+    public CollisionManager(List<? extends Collidable> obstacles) {
+        this.obstacles = new ArrayList<>(obstacles);
     }
 
     public boolean isCellBlocked(GridPoint2 destinationCoordinates) {
@@ -21,6 +22,14 @@ public class CollisionManager {
             }
         }
         return false;
+    }
+
+    public List<Collidable> getObstacles() {
+        return obstacles;
+    }
+
+    public void addObstacle(Collidable obstacle) {
+        obstacles.add(obstacle);
     }
 }
 

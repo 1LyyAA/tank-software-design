@@ -18,6 +18,11 @@ public class Tree implements GameObject , Collidable {
     private GridPoint2 treeObstacleCoordinates;
     private Rectangle treeObstacleRectangle;
 
+
+    public static Tree makeTreeAtTile(String internalPath, TiledMapTileLayer groundLayer, GridPoint2 tileCoordinates) {
+        return new Tree(internalPath, groundLayer, tileCoordinates);
+    }
+
     public Tree(String internalPath, TiledMapTileLayer groundLayer,  GridPoint2 tileCoordinates) {
         greenTreeTexture = new Texture(internalPath);
         treeObstacleGraphics = new TextureRegion(greenTreeTexture);
