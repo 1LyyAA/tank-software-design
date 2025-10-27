@@ -4,31 +4,16 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-//import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-//import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.MapRenderer;
-import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.Interpolation;
-//import com.badlogic.gdx.math.Rectangle;
-
-import ru.mipt.bit.platformer.objects.GameObject;
-import ru.mipt.bit.platformer.objects.Tank;
 import ru.mipt.bit.platformer.objects.Tree;
-import ru.mipt.bit.platformer.util.TileMovement;
 import ru.mipt.bit.platformer.util.InputHandler;
 
-//import static com.badlogic.gdx.Input.Keys.*;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
-//import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 import static ru.mipt.bit.platformer.LevelBuilder.createLevel;
-
-
-
-import java.util.ArrayList;
-import java.util.List;
+import static ru.mipt.bit.platformer.LevelBuilder.createRandomLevel;;
 
 public class GameDesktopLauncher implements ApplicationListener {
 
@@ -39,8 +24,10 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void create() {
         
+        level = createRandomLevel("level.tmx");
+
         batch = new SpriteBatch();
-        level = createLevel("level.tmx", "src/main/resources/images/level.txt");
+        //level = createLevel("level.tmx", "src/main/resources/images/level.txt");
 
         levelRenderer = createSingleLayerMapRenderer(level.getMap(), batch);
 

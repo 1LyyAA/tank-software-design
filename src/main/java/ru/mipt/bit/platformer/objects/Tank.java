@@ -132,5 +132,9 @@ public class Tank implements GameObject, Collidable, Movable {
     public void setTankCoordinates(GridPoint2 tankCoordinates) {
         TankCoordinates = tankCoordinates;
     }
+
+    public void setTankDestinationCoordinates(GridPoint2 tankDestinationCoordinates) {
+        TankDestinationCoordinates = tankDestinationCoordinates;
+    }
 }
 
