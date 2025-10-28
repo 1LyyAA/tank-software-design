@@ -18,3 +18,5 @@ gradle-app.setting
 .idea
 
 .vscode
+
+src/main/resources/images/RandomLevel.txt
