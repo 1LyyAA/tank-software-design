@@ -13,6 +13,7 @@ import static java.nio.file.Files.newBufferedReader;
 import com.badlogic.gdx.math.GridPoint2;
 
 import ru.mipt.bit.platformer.objects.*;
+import static ru.mipt.bit.platformer.objects.Objects.*;
 
 
 public class LevelBuilder {
@@ -22,7 +23,6 @@ public class LevelBuilder {
     public static Level createLevel(String tmxFilePath, String levelPath) {
         String[] invertedLvl = getInvertedLvl(levelPath);
         String[] Lvl = invertLvl(invertedLvl);
-
         Level level = generateLvl(tmxFilePath, Lvl);
         
         return level;
@@ -75,9 +75,9 @@ public class LevelBuilder {
         for (int y = 0; y < levelSizeInTiles.y; y++) {
             for (int x = 0; x < levelSizeInTiles.x; x++) {
                 char symbol = Lvl[y].charAt(x);
-                if (symbol == Objects.TREE.symbol) {
+                if (symbol == TREE.symbol) {
                     addTrees(level, y, x);
-                } else if (symbol == Objects.TANK.symbol) {
+                } else if (symbol == TANK.symbol) {
                     addTank(level, y, x);
                 }
             }

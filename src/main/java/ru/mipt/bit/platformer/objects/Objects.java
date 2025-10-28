@@ -1,4 +1,4 @@
-package ru.mipt.bit.platformer;
+package ru.mipt.bit.platformer.objects;
 
 public enum Objects {
     TREE('T'),
