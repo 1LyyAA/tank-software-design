@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.CollisionManager;
 import ru.mipt.bit.platformer.Directions;
-import ru.mipt.bit.platformer.objects.Tank;
 import ru.mipt.bit.platformer.util.TileMovement;
 
 

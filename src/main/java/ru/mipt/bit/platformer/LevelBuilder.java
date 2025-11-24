@@ -7,28 +7,24 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Random;
-
 import static java.nio.file.Files.newBufferedReader;
-
+import static ru.mipt.bit.platformer.Objects.*;
 import com.badlogic.gdx.math.GridPoint2;
+import java.util.List;
 
-import ru.mipt.bit.platformer.objects.*;
-import static ru.mipt.bit.platformer.objects.Objects.*;
 
 
 public class LevelBuilder {
 
     private static GridPoint2 levelSizeInTiles = new GridPoint2(10, 8);
 
-    public static Level createLevel(String tmxFilePath, String levelPath) {
+    public static LevelData createLevel(String tmxFilePath, String levelPath) {
         String[] invertedLvl = getInvertedLvl(levelPath);
         String[] Lvl = invertLvl(invertedLvl);
-        Level level = generateLvl(tmxFilePath, Lvl);
-        
-        return level;
+        return generateLvl(tmxFilePath, Lvl);
     }
 
-    public static Level createRandomLevel(String tmxFilePath) {
+    public static LevelData createRandomLevel(String tmxFilePath) {
         String Lvl = makeRandomLevelLayout();
         exportLvl(Lvl);
         
@@ -69,32 +65,46 @@ public class LevelBuilder {
         return sb.toString();
     }
 
-    private static Level generateLvl(String tmxFilePath, String[] Lvl) {
-        Level level = new Level(tmxFilePath, new ArrayList<>(), null, new CollisionManager(new ArrayList<>()));
-
+    private static LevelData generateLvl(String tmxFilePath, String[] Lvl) {
+        Level level = new Level(tmxFilePath);
+        List<GameObject> objects = new ArrayList<>();
+        Tank playerTank = null;
+        List<Tank> enemyTanks = new ArrayList<>();
+        
         for (int y = 0; y < levelSizeInTiles.y; y++) {
             for (int x = 0; x < levelSizeInTiles.x; x++) {
                 char symbol = Lvl[y].charAt(x);
                 if (symbol == TREE.symbol) {
-                    addTrees(level, y, x);
+                    objects.add(Tree.makeTreeAt(new GridPoint2(x, y)));
                 } else if (symbol == TANK.symbol) {
-                    addTank(level, y, x);
+                    // X - игрок
+                    playerTank = Tank.makeTankAtTile(level, new GridPoint2(x, y));
+                    objects.add(playerTank);
+                } else if (symbol == Objects.ENEMY.symbol) {
+                    // E - враг
+                    Tank enemy = Tank.makeEnemyTank(level, new GridPoint2(x, y));
+                    enemyTanks.add(enemy);
+                    objects.add(enemy);
                 }
             }
         }
-        return level;
+
+        level.addObjects(objects);
+        return new LevelData(level, playerTank, enemyTanks);
     }
 
-    private static void addTank(Level level, int y, int x) {
-        level.setTank(Tank.makeTankAtTile(level.getCollisionManager(), level.getTileMovement()));
-        level.getTank().setTankCoordinates(new GridPoint2(x, y));
-        level.getTank().setTankDestinationCoordinates(new GridPoint2(x, y));
-    }
+    // private static void addTank(Level level, int y, int x) {
+    //     level.setTank(Tank.makeTankAtTile(level.getCollisionManager(), level.getTileMovement()));
+    //     level.getTank().setCoordinates(new GridPoint2(x, y));
+    //     level.getTank().setDestinationCoordinates(new GridPoint2(x, y));
+    //     level.getCollisionManager().addMovingObstacle(level.getTank());
+    // }
 
-    private static void addTrees(Level level, int y, int x) {
-        level.getTrees().add(Tree.makeTreeAtTile("images/greenTree.png", level.getGroundLayer(), new GridPoint2(x, y)));
-        level.getCollisionManager().addObstacle(level.getTrees().get(level.getTrees().size() - 1));
-    }
+    // private static void addTrees(Level level, int y, int x) {
+    //     Tree tree = Tree.makeTreeAt(new GridPoint2(x, y));
+    //     level.getTrees().add(tree);
+    //     level.getCollisionManager().addStaticObstacle(tree);
+    // }
 
     private static String[] invertLvl(String[] invertedLvl) {
         String[] Lvl = new String[invertedLvl.length];

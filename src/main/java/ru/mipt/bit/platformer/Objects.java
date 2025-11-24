@@ -1,8 +1,9 @@
-package ru.mipt.bit.platformer.objects;
+package ru.mipt.bit.platformer;
 
 public enum Objects {
     TREE('T'),
     TANK('X'),
+    ENEMY('E'),
     BLANK('_');
 
     public final char symbol;
