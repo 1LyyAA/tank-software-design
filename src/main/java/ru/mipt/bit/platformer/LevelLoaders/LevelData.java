@@ -1,6 +1,9 @@
-package ru.mipt.bit.platformer;
+package ru.mipt.bit.platformer.LevelLoaders;
 
 import java.util.List;
+
+import ru.mipt.bit.platformer.Level;
+import ru.mipt.bit.platformer.Tank;
 
 /**
  * Класс-контейнер для данных уровня.

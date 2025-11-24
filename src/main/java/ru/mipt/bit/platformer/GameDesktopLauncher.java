@@ -6,42 +6,24 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.MapRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.math.Interpolation;
-
+import ru.mipt.bit.platformer.Commands.Command;
+import ru.mipt.bit.platformer.Controllers.*;
 import ru.mipt.bit.platformer.Graphics.LevelGraphics;
-import ru.mipt.bit.platformer.util.KeyboardListener;
-import ru.mipt.bit.platformer.util.TileMovement;
-
+import ru.mipt.bit.platformer.LevelLoaders.LevelData;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
-import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
+import static ru.mipt.bit.platformer.LevelLoaders.LevelBuilder.createLevel;
+import static ru.mipt.bit.platformer.LevelLoaders.LevelBuilder.createRandomLevel;
 
-import java.util.List;
-
-import static ru.mipt.bit.platformer.LevelBuilder.createLevel;
-import static ru.mipt.bit.platformer.LevelBuilder.createRandomLevel;;
+import java.util.ArrayList;
+import java.util.List;;
 
 public class GameDesktopLauncher implements ApplicationListener {
-
     private Batch batch;
-    // private MapRenderer levelRenderer;
     private Level level;
     private LevelGraphics levelGraphics;
-    private KeyboardListener keyboardListener;
-    
 
-    // public Level(String path, List<Tree> trees, Tank tank, CollisionManager collisionManager) {
-    //     map = new TmxMapLoader().load(path);
-    //     groundLayer = (TiledMapTileLayer) map.getLayers().get(0);
-    //     this.trees = trees;
-    //     this.tank = tank;
-    //     this.collisionManager = collisionManager;
-    //     this.tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
-    // }
-
-
+    private PlayerController playerController;
+    private AIController aiController;
 
 
 
@@ -57,29 +39,30 @@ public class GameDesktopLauncher implements ApplicationListener {
         List<Tank> enemyTanks = levelData.getEnemyTanks();
 
         levelGraphics = new LevelGraphics(level, batch);
-        keyboardListener = new KeyboardListener(playerTank);
-        Gdx.input.setInputProcessor(keyboardListener);
-
+        playerController = new PlayerController(playerTank);
+        aiController = new AIController(enemyTanks);
     }
 
     @Override
     public void render() {
         clearScreen();
-        // get time passed since the last render
+
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        // update game state
+        ArrayList<Command> commands = new ArrayList<>();
+        commands.addAll(playerController.pollCommands());
+        commands.addAll(aiController.pollCommands());
+        for (Command command : commands) {
+            command.execute();
+        }
+
         for (GameObject object : level.getObjects()) {
             object.update(deltaTime);
         }
-
+        
         levelGraphics.renderMap();
-        // start recording all drawing commands
         batch.begin();
-
         levelGraphics.renderObjects(batch);
-
-        // submit all drawing requests
         batch.end();
     }
 

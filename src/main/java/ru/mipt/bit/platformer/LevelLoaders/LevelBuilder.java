@@ -1,4 +1,4 @@
-package ru.mipt.bit.platformer;
+package ru.mipt.bit.platformer.LevelLoaders;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,6 +10,13 @@ import java.util.Random;
 import static java.nio.file.Files.newBufferedReader;
 import static ru.mipt.bit.platformer.Objects.*;
 import com.badlogic.gdx.math.GridPoint2;
+
+import ru.mipt.bit.platformer.GameObject;
+import ru.mipt.bit.platformer.Level;
+import ru.mipt.bit.platformer.Objects;
+import ru.mipt.bit.platformer.Tank;
+import ru.mipt.bit.platformer.Tree;
+
 import java.util.List;
 
 

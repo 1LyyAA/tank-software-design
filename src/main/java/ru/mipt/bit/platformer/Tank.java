@@ -25,7 +25,6 @@ public class Tank implements GameObject {
 
     public static Tank makeEnemyTank(Level level, GridPoint2 coordinates) {
         Tank tank = new Tank(level, coordinates);
-        tank.setRandomPosition();
         return tank;
     }
 

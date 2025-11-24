@@ -1,11 +1,5 @@
 package ru.mipt.bit.platformer;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.math.GridPoint2;
-
-
 
 public class CollisionManager {
     Level level;

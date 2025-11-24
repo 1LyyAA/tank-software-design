@@ -21,4 +21,10 @@ public enum Directions {
     public GridPoint2 toPoint() {
         return new GridPoint2(dx, dy);
     }
+
+    public static Directions random() {
+        Directions[] directions = Directions.values();
+        int index = (int) (Math.random() * directions.length);
+        return directions[index];
+    }
 }
