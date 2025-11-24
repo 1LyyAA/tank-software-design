@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Random;
 import static java.nio.file.Files.newBufferedReader;
@@ -18,8 +18,6 @@ import ru.mipt.bit.platformer.Tank;
 import ru.mipt.bit.platformer.Tree;
 
 import java.util.List;
-
-
 
 public class LevelBuilder {
 
@@ -100,19 +98,6 @@ public class LevelBuilder {
         return new LevelData(level, playerTank, enemyTanks);
     }
 
-    // private static void addTank(Level level, int y, int x) {
-    //     level.setTank(Tank.makeTankAtTile(level.getCollisionManager(), level.getTileMovement()));
-    //     level.getTank().setCoordinates(new GridPoint2(x, y));
-    //     level.getTank().setDestinationCoordinates(new GridPoint2(x, y));
-    //     level.getCollisionManager().addMovingObstacle(level.getTank());
-    // }
-
-    // private static void addTrees(Level level, int y, int x) {
-    //     Tree tree = Tree.makeTreeAt(new GridPoint2(x, y));
-    //     level.getTrees().add(tree);
-    //     level.getCollisionManager().addStaticObstacle(tree);
-    // }
-
     private static String[] invertLvl(String[] invertedLvl) {
         String[] Lvl = new String[invertedLvl.length];
         for (int i = 0; i < invertedLvl.length; i++) {
@@ -123,10 +108,10 @@ public class LevelBuilder {
 
     private static String[] getInvertedLvl(String levelPath) {
         String[] invertedLvl;
-        try (BufferedReader reader = newBufferedReader(Path.of(levelPath))) {
+        try (BufferedReader reader = newBufferedReader(Paths.get(levelPath))) {
             invertedLvl = reader.lines().toArray(String[]::new);
         } catch (Exception e) {
-            System.out.println(Path.of(levelPath).toAbsolutePath());
+            System.out.println(Paths.get(levelPath).toAbsolutePath());
             throw new RuntimeException("Failed to read level file", e);
         }
         return invertedLvl;
