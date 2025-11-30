@@ -1,22 +1,16 @@
 package ru.mipt.bit.platformer.LevelLoaders;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Random;
 import static java.nio.file.Files.newBufferedReader;
 import static ru.mipt.bit.platformer.Objects.*;
 import com.badlogic.gdx.math.GridPoint2;
-
 import ru.mipt.bit.platformer.GameObject;
 import ru.mipt.bit.platformer.Level;
 import ru.mipt.bit.platformer.Objects;
 import ru.mipt.bit.platformer.Tank;
 import ru.mipt.bit.platformer.Tree;
-
 import java.util.List;
 
 public class FileLevelGenerator implements LevelGenerator {

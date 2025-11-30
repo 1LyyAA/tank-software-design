@@ -5,16 +5,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.Gdx;
-
 import ru.mipt.bit.platformer.Tank;
 import ru.mipt.bit.platformer.util.TileMovement;
-
 import static ru.mipt.bit.platformer.util.GdxGameUtils.drawTextureRegionUnscaled;
-
-import org.w3c.dom.Text;
-
 import static ru.mipt.bit.platformer.util.GdxGameUtils.createBoundingRectangle;
 
 

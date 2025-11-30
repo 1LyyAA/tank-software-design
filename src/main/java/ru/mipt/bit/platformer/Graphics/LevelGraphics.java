@@ -16,7 +16,6 @@ public class LevelGraphics {
     private ArrayList<Graphics> graphics;
     private GraphicsFactory graphicsFactory;
     private TileMovement tileMovement;
-    private UIState uiState;
 
     public LevelGraphics(Level level, Batch batch) {
         this.level = level;
@@ -31,8 +30,6 @@ public class LevelGraphics {
         for (int i = 0; i < level.getObjects().size(); i++) {
             this.graphics.add(graphicsFactory.createGraphicsFor(level.getObjects().get(i)));
         }
-        this.uiState = UIState.getInstance();
-        
     }
 
     public void addObjectGraphics(GameObject object) {

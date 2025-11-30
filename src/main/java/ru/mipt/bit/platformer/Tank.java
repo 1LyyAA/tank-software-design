@@ -11,7 +11,7 @@ public class Tank implements GameObject {
     private float TankRotation;
     private float TankMovementProggress = 1f;
     private Level level;
-    private int HitPoints = 100;
+    private int HitPoints = 70;
 
     public static Tank makeTankAtTile(Level level, GridPoint2 coordinates) {
         return new Tank(level, coordinates);
@@ -52,7 +52,7 @@ public class Tank implements GameObject {
     }
 
     
-    
+
     public GridPoint2 getCoordinates() {
         return Coordinates;
     }
