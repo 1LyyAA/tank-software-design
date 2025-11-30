@@ -11,6 +11,7 @@ public class Tank implements GameObject {
     private float TankRotation;
     private float TankMovementProggress = 1f;
     private Level level;
+    private int HitPoints = 100;
 
     public static Tank makeTankAtTile(Level level, GridPoint2 coordinates) {
         return new Tank(level, coordinates);
