@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import ru.mipt.bit.platformer.Commands.Command;
 import ru.mipt.bit.platformer.Controllers.*;
 import ru.mipt.bit.platformer.Graphics.LevelGraphics;
+import ru.mipt.bit.platformer.Graphics.UIState;
 import ru.mipt.bit.platformer.LevelLoaders.FileLevelGenerator;
 import ru.mipt.bit.platformer.LevelLoaders.LevelData;
 import ru.mipt.bit.platformer.LevelLoaders.RandomLevelGenerator;

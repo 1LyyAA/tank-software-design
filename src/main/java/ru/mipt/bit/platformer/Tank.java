@@ -29,45 +29,6 @@ public class Tank implements GameObject {
         return tank;
     }
 
-    public void setRandomPosition() {
-        // randomly place the tank on the map 10x8
-        Coordinates = new GridPoint2((int)(Math.random() * 10), (int)(Math.random() * 8));
-        DestinationCoordinates = new GridPoint2(Coordinates);
-        TankRotation = 0f;
-    }
-
-    public GridPoint2 getCoordinates() {
-        return Coordinates;
-    }
-
-    public void setRotation(float angle) {
-        this.TankRotation = angle;
-    }
-
-    public float getTankRotation() {
-        return TankRotation;
-    }
-
-    public float getMovementProggress() {
-        return TankMovementProggress;
-    }
-
-    public void setMovementProggress(float x) {
-        TankMovementProggress = x;
-    }
-
-    @Override
-    public void update(float deltaTime) {
-        // обновляем прогресс движения от 0 до 1
-
-        
-        TankMovementProggress = continueProgress(TankMovementProggress, deltaTime, TankSpeed);
-        // если достигли цели, фиксируем координаты
-        if (!isMoving()) {
-            Coordinates.set(DestinationCoordinates);
-        }
-    }
-
     public boolean isMoving() {
         return !isEqual(TankMovementProggress, 1f);
     }
@@ -90,12 +51,59 @@ public class Tank implements GameObject {
         setMovementProggress(0f);
     }
 
-    public void setCoordinates(GridPoint2 coordinates) {
-        Coordinates = coordinates;
+    
+    
+    public GridPoint2 getCoordinates() {
+        return Coordinates;
     }
+    
+    
+    public float getTankRotation() {
+        return TankRotation;
+    }
+
+    public float getMovementProggress() {
+        return TankMovementProggress;
+    }
+
 
     public GridPoint2 getDestinationCoordinates() {
         return DestinationCoordinates;
+    }
+
+    public int getHitPoints() {
+        return HitPoints;
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        // обновляем прогресс движения от 0 до 1
+
+        
+        TankMovementProggress = continueProgress(TankMovementProggress, deltaTime, TankSpeed);
+        // если достигли цели, фиксируем координаты
+        if (!isMoving()) {
+            Coordinates.set(DestinationCoordinates);
+        }
+    }
+
+    public void setRandomPosition() {
+        // randomly place the tank on the map 10x8
+        Coordinates = new GridPoint2((int)(Math.random() * 10), (int)(Math.random() * 8));
+        DestinationCoordinates = new GridPoint2(Coordinates);
+        TankRotation = 0f;
+    }
+
+    public void setMovementProggress(float x) {
+        TankMovementProggress = x;
+    }
+
+    public void setRotation(float angle) {
+        this.TankRotation = angle;
+    }
+    
+    public void setCoordinates(GridPoint2 coordinates) {
+        Coordinates = coordinates;
     }
 
     public void setDestinationCoordinates(GridPoint2 destinationCoordinates) {
