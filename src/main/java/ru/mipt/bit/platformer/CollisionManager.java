@@ -1,35 +1,27 @@
 package ru.mipt.bit.platformer;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.math.GridPoint2;
-import ru.mipt.bit.platformer.objects.Collidable;
-
 
 public class CollisionManager {
-
-    private final List<Collidable> obstacles;
-
-    public CollisionManager(List<? extends Collidable> obstacles) {
-        this.obstacles = new ArrayList<>(obstacles);
+    Level level;
+  
+    public CollisionManager(Level level) {
+        this.level = level;
     }
 
-    public boolean isCellBlocked(GridPoint2 destinationCoordinates) {
-        for (Collidable object : obstacles) {
-            if (object.getCoordinates().equals(destinationCoordinates)) {
+    public boolean isCellBlocked(GridPoint2 CellCoordinates) {
+        for (GameObject object : level.getObjects()) {
+            if (object.getCoordinates().equals(CellCoordinates) ||
+                object.getDestinationCoordinates().equals(CellCoordinates)) {
                 return true;
             }
         }
+        // check if in map bounds 10 by 8
+        if (CellCoordinates.x < 0 || CellCoordinates.x >= 10 ||
+            CellCoordinates.y < 0 || CellCoordinates.y >= 8) {
+            return true;
+        }
+
         return false;
-    }
-
-    public List<Collidable> getObstacles() {
-        return obstacles;
-    }
-
-    public void addObstacle(Collidable obstacle) {
-        obstacles.add(obstacle);
     }
 }
 

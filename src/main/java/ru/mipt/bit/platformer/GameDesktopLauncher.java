@@ -6,56 +6,70 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.MapRenderer;
-import ru.mipt.bit.platformer.objects.Tree;
-import ru.mipt.bit.platformer.util.InputHandler;
+import ru.mipt.bit.platformer.Commands.Command;
+import ru.mipt.bit.platformer.Controllers.*;
+import ru.mipt.bit.platformer.Graphics.LevelGraphics;
+import ru.mipt.bit.platformer.LevelLoaders.FileLevelGenerator;
+import ru.mipt.bit.platformer.LevelLoaders.LevelData;
+import ru.mipt.bit.platformer.LevelLoaders.RandomLevelGenerator;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
-import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
-import static ru.mipt.bit.platformer.LevelBuilder.createLevel;
-import static ru.mipt.bit.platformer.LevelBuilder.createRandomLevel;;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;;
 
 public class GameDesktopLauncher implements ApplicationListener {
-
     private Batch batch;
-    private MapRenderer levelRenderer;
     private Level level;
+    private LevelGraphics levelGraphics;
+
+    private PlayerController playerController;
+    private AIController aiController;
+
+
 
     @Override
     public void create() {
-        
-        level = createRandomLevel("level.tmx");
-
         batch = new SpriteBatch();
-        //level = createLevel("level.tmx", "src/main/resources/images/level.txt");
 
-        levelRenderer = createSingleLayerMapRenderer(level.getMap(), batch);
+        RandomLevelGenerator levelGenerator = new RandomLevelGenerator("level.tmx");
+        FileLevelGenerator fileLevelGenerator = new FileLevelGenerator("level.tmx",
+                "src/main/resources/images/Level.txt");
 
+        //LevelData levelData = levelGenerator.generate();
+        LevelData levelData = fileLevelGenerator.generate();
+
+        level = levelData.getLevel();
+        Tank playerTank = levelData.getPlayerTank();
+        List<Tank> enemyTanks = levelData.getEnemyTanks();
+
+        levelGraphics = new LevelGraphics(level, batch);
+        playerController = new PlayerController(playerTank);
+        aiController = new AIController(enemyTanks);
     }
 
     @Override
     public void render() {
         clearScreen();
-        // get time passed since the last render
+
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        level.getTank().tryMove(InputHandler.getInput());
-        level.getTank().update(deltaTime);
-
-        levelRenderer.render();
-
-        // start recording all drawing commands
-        batch.begin();
-
-        // render player
-        level.getTank().render(batch);
-
-        // render tree obstacle
-        for (Tree tree : level.getTrees()) {
-            tree.render(batch);
+        ArrayList<Command> commands = new ArrayList<>();
+        commands.addAll(playerController.pollCommands());
+        commands.addAll(aiController.pollCommands());
+        for (Command command : commands) {
+            command.execute();
         }
 
-        // submit all drawing requests
+        for (GameObject object : level.getObjects()) {
+            object.update(deltaTime);
+        }
+        
+        levelGraphics.renderMap();
+        batch.begin();
+        levelGraphics.renderObjects(batch);
         batch.end();
     }
 
@@ -82,12 +96,11 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void dispose() {
         // dispose of all the native resources (classes which implement com.badlogic.gdx.utils.Disposable)
-        level.dispose();
+        levelGraphics.dispose();
         batch.dispose();
     }
 
     public static void main(String[] args) {
-
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         // level width: 10 tiles x 128px, height: 8 tiles x 128px
         config.setWindowedMode(1280, 1024);
