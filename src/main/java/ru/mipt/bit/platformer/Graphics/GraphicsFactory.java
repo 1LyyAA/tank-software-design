@@ -22,7 +22,7 @@ public class GraphicsFactory {
      */
     public Graphics createGraphicsFor(GameObject gameObject) {
         if (gameObject instanceof Tank) {
-            return new TankGraphics((Tank) gameObject, tileMovement);
+            return new HealthBarDecorator(new TankGraphics((Tank) gameObject, tileMovement));
         } else if (gameObject instanceof Tree) {
             return new TreeGraphics(groundLayer, gameObject.getCoordinates(), (Tree) gameObject);
         }

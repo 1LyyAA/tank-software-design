@@ -12,13 +12,10 @@ import ru.mipt.bit.platformer.Graphics.LevelGraphics;
 import ru.mipt.bit.platformer.LevelLoaders.FileLevelGenerator;
 import ru.mipt.bit.platformer.LevelLoaders.LevelData;
 import ru.mipt.bit.platformer.LevelLoaders.RandomLevelGenerator;
-
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
-
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;;
+
 
 public class GameDesktopLauncher implements ApplicationListener {
     private Batch batch;

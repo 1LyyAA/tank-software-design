@@ -10,6 +10,7 @@ import ru.mipt.bit.platformer.Tank;
 import ru.mipt.bit.platformer.Commands.Command;
 import ru.mipt.bit.platformer.Commands.MoveCommand;
 import ru.mipt.bit.platformer.Commands.ShootCommand;
+import ru.mipt.bit.platformer.Graphics.ToggleHealthCommand;
 
 public class PlayerController {
     private Tank tank;
@@ -43,6 +44,10 @@ public class PlayerController {
         // if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
         //     commands.add(new ShootCommand(tank));
         // }
+        
+        if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            commands.add(new ToggleHealthCommand());
+        }
 
         return commands;
     }
