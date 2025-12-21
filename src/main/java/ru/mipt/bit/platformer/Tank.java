@@ -11,7 +11,7 @@ public class Tank implements GameObject {
     private float TankRotation;
     private float TankMovementProggress = 1f;
     private Level level;
-    private int HitPoints = 70;
+    private int HitPoints = 100;
     
 
     public static Tank makeTankAtTile(Level level, GridPoint2 coordinates) {
@@ -35,11 +35,16 @@ public class Tank implements GameObject {
     }
 
     public Bullet shoot() {
-        Bullet bullet = new Bullet(getCoordinates(), getTankRotation());
+        Bullet bullet = new Bullet(getCoordinates(), getTankRotation(), level);
         level.addObject(bullet);
         return bullet;
     }
-
+    public void takeDamage() {
+        HitPoints -= 25;
+        if (HitPoints < 0) {
+            HitPoints = 0;
+        }
+    }
     public void tryMove(Directions direction) {
         if (isMoving() || direction == null) {
             return;
@@ -49,7 +54,7 @@ public class Tank implements GameObject {
                 Coordinates.x + direction.dx,
                 Coordinates.y + direction.dy);
 
-        if (level.isCellBlocked(destinationCoordinates)) {
+        if (level.getCollisionManager().isCollided(destinationCoordinates)) {
             return;
         }
 
@@ -58,7 +63,13 @@ public class Tank implements GameObject {
         setMovementProggress(0f);
     }
 
-    
+    @Override
+    public boolean isAlive() {
+        if (HitPoints > 0) {
+            return true;
+        }
+        return false;
+    }
 
     public GridPoint2 getCoordinates() {
         return Coordinates;

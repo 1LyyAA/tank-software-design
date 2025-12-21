@@ -50,10 +50,6 @@ public class Level {
         return collisionManager;
     }
 
-    public boolean isCellBlocked(GridPoint2 cellCoordinates) {
-        return collisionManager.isCellBlocked(cellCoordinates);
-    }
-
     public void setCollisionManager(CollisionManager collisionManager) {
         this.collisionManager = collisionManager;
     }

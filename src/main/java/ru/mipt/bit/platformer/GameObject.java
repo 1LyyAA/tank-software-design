@@ -6,4 +6,5 @@ public interface GameObject {
     GridPoint2 getCoordinates();
     GridPoint2 getDestinationCoordinates();
     void update(float delta);
+    boolean isAlive();
 }

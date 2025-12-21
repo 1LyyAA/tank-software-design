@@ -1,18 +1,24 @@
 package ru.mipt.bit.platformer;
 
 import com.badlogic.gdx.math.GridPoint2;
+
+import ru.mipt.bit.platformer.Observers.Observer;
+
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 
-public class Bullet implements GameObject {
+public class Bullet implements GameObject, Observable {
     
+    private Level level;
     private GridPoint2 Coordinates;
     private GridPoint2 DestinationCoordinates;
     private final Directions direction;
     private float BulletMovementProgress = 0f;
     private final float BulletSpeed = 0.15f; 
+    private  boolean isAlive = true;
 
-    public Bullet(GridPoint2 tankCoordinates, float rotation) {
+    public Bullet(GridPoint2 tankCoordinates, float rotation, Level level) {
+        this.level = level;
         Directions direction = Directions.fromRotation(rotation);
         this.direction = direction;
         
@@ -28,7 +34,25 @@ public class Bullet implements GameObject {
     }
 
     @Override
+    public <T extends GameObject> void addListener(Class<T> type, Observer<? super T> observer) {
+        // Implementation for adding an observer
+    }
+
+    @Override
     public void update(float deltaTime) {
+        updateCoords(deltaTime);
+        if (!isAlive) {
+            return;
+        }
+        this.isAlive = !level.getCollisionManager().checkBulletCollisions(DestinationCoordinates);
+    }
+
+    @Override
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    private void updateCoords(float deltaTime) {
         BulletMovementProgress = continueProgress(BulletMovementProgress, deltaTime, BulletSpeed);
         if (isEqual(BulletMovementProgress, 1f)) {
             Coordinates.set(DestinationCoordinates);
