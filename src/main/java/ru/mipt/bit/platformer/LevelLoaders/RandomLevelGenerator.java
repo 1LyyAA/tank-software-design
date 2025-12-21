@@ -12,7 +12,6 @@ import com.badlogic.gdx.math.GridPoint2;
 
 import ru.mipt.bit.platformer.GameObject;
 import ru.mipt.bit.platformer.Level;
-import ru.mipt.bit.platformer.Objects;
 import ru.mipt.bit.platformer.Tank;
 import ru.mipt.bit.platformer.Tree;
 
@@ -45,7 +44,7 @@ public class RandomLevelGenerator implements LevelGenerator {
                     // X - игрок
                     playerTank = Tank.makeTankAtTile(level, new GridPoint2(x, y));
                     objects.add(playerTank);
-                } else if (symbol == Objects.ENEMY.symbol) {
+                } else if (symbol == ENEMY.symbol) {
                     // E - враг
                     Tank enemy = Tank.makeEnemyTank(level, new GridPoint2(x, y));
                     enemyTanks.add(enemy);

@@ -1,6 +1,10 @@
 package ru.mipt.bit.platformer.Graphics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.math.Interpolation;
@@ -13,7 +17,7 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 public class LevelGraphics {
     Level level;
     private MapRenderer levelRenderer;
-    private ArrayList<Graphics> graphics;
+    private Map<GameObject, Graphics> graphics;
     private GraphicsFactory graphicsFactory;
     private TileMovement tileMovement;
 
@@ -26,18 +30,33 @@ public class LevelGraphics {
 
         this.graphicsFactory = new GraphicsFactory(level.getGroundLayer(), tileMovement);
 
-        this.graphics = new ArrayList<>();
-        for (int i = 0; i < level.getObjects().size(); i++) {
-            this.graphics.add(graphicsFactory.createGraphicsFor(level.getObjects().get(i)));
+        this.graphics = new HashMap<>();
+
+        for (GameObject object : level.getObjects()) {
+            this.graphics.put(object, graphicsFactory.createGraphicsFor(object));
         }
     }
 
     public void addObjectGraphics(GameObject object) {
-        this.graphics.add(graphicsFactory.createGraphicsFor(object));
+        this.graphics.put(object, graphicsFactory.createGraphicsFor(object));
     }
 
+    public void removeFor(GameObject object) {
+        Graphics graphic = graphics.get(object);
+        if (graphic != null) {
+            graphic.dispose();
+            graphics.remove(object);
+        }
+    }
+    
+
     public void renderObjects(Batch batch) {
-        for (Graphics graphic : graphics) {
+        // while (graphics.size() < level.getObjects().size()) {
+        //     GameObject newObject = level.getObjects().get(graphics.size());
+        //     graphics.put(newObject, graphicsFactory.createGraphicsFor(newObject));
+        // }
+        
+        for (Graphics graphic : graphics.values()) {
             graphic.render(batch);
         }
     }
@@ -47,7 +66,7 @@ public class LevelGraphics {
     }
 
     public void dispose() {
-        for (Graphics graphic : graphics) {
+        for (Graphics graphic : graphics.values()) {
             graphic.dispose();
         }
     }

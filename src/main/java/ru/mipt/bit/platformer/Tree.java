@@ -28,4 +28,9 @@ public class Tree implements GameObject {
         return treeObstacleCoordinates;
     }
 
+    @Override
+    public boolean isAlive() {
+        return true;
+    }
+
 }

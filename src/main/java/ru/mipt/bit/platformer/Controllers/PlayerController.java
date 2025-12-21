@@ -19,10 +19,6 @@ public class PlayerController {
         this.tank = tank;
     }
     
-    /**
-     * Проверяет нажатые клавиши и двигает танк.
-     * Вызывается каждый кадр для поддержки удержания клавиш.
-     */
     public List<Command> pollCommands() {
         List<Command> commands = new ArrayList<>();
 
@@ -40,10 +36,9 @@ public class PlayerController {
             commands.add(new MoveCommand(tank, Directions.RIGHT));
         }
 
-        // стрельба
-        // if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-        //     commands.add(new ShootCommand(tank));
-        // }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            commands.add(new ShootCommand(tank));
+        }
         
         if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             commands.add(new ToggleHealthCommand());

@@ -13,11 +13,11 @@ public class HealthBarDecorator implements Graphics {
 
     public void render(Batch batch) {
         tankGraphics.render(batch);
-        // Логика отрисовки полоски здоровья поверх танка
+    
         if (UIState.getInstance().isShowHealthBars()) {
-            batch.end(); // Завершаем batch для ShapeRenderer
+            batch.end();
             drawHealthBar();
-            batch.begin(); // Возобновляем batch
+            batch.begin();
         }
     }
     
@@ -27,16 +27,13 @@ public class HealthBarDecorator implements Graphics {
         float barX = tankGraphics.getTankRectangle().x;
         float barY = tankGraphics.getTankRectangle().y + tankGraphics.getTankRectangle().height + 5;
         
-        // Предполагаем, что у танка 100 HP (можно добавить поле health в Tank)
-        float healthPercent = tankGraphics.getTank().getHitPoints() / 100.0f; // 100% здоровья
+        float healthPercent = tankGraphics.getTank().getHitPoints() / 100.0f;
         
         tankGraphics.getShapeRenderer().begin(ShapeRenderer.ShapeType.Filled);
         
-        // Фон полоски (красный)
         tankGraphics.getShapeRenderer().setColor(Color.RED);
         tankGraphics.getShapeRenderer().rect(barX, barY, barWidth, barHeight);
         
-        // Текущее здоровье (зеленый)
         tankGraphics.getShapeRenderer().setColor(Color.GREEN);
         tankGraphics.getShapeRenderer().rect(barX, barY, barWidth * healthPercent, barHeight);
         
