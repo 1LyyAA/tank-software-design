@@ -1,7 +1,9 @@
-package ru.mipt.bit.platformer;
+package ru.mipt.bit.platformer.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import ru.mipt.bit.platformer.Level;
 import ru.mipt.bit.platformer.Controllers.AIController;
 import ru.mipt.bit.platformer.Controllers.PlayerController;
 import ru.mipt.bit.platformer.Graphics.LevelGraphics;

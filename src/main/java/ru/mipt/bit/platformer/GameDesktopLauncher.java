@@ -14,6 +14,7 @@ import ru.mipt.bit.platformer.LevelLoaders.FileLevelGenerator;
 import ru.mipt.bit.platformer.LevelLoaders.LevelData;
 import ru.mipt.bit.platformer.LevelLoaders.RandomLevelGenerator;
 import ru.mipt.bit.platformer.Observers.*;
+import ru.mipt.bit.platformer.config.SpringConfig;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import java.util.ArrayList;

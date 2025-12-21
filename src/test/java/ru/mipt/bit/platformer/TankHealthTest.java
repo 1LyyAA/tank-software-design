@@ -25,7 +25,7 @@ public class TankHealthTest {
 
     @Test
     public void testTakeDamage() {
-        tank.takeDamage();
+        tank.takeDamage();// each tank can take 4 hits
         assertEquals(75, tank.getHitPoints());
         assertTrue(tank.isAlive());
     }
