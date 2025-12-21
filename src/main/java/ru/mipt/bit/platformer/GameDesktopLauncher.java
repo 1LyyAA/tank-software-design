@@ -5,7 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.mipt.bit.platformer.Commands.Command;
 import ru.mipt.bit.platformer.Controllers.*;
 import ru.mipt.bit.platformer.Graphics.LevelGraphics;
@@ -31,29 +32,18 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void create() {
-        batch = new SpriteBatch();
+        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
 
-        RandomLevelGenerator levelGenerator = new RandomLevelGenerator("level.tmx");
-        FileLevelGenerator fileLevelGenerator = new FileLevelGenerator("level.tmx",
-                "src/main/resources/images/Level.txt");
+        batch = context.getBean(Batch.class);
+        level = context.getBean(Level.class);
+        levelGraphics = context.getBean(LevelGraphics.class);
+        BulletGraphicsObserver bulletGraphicsObserver = context.getBean(BulletGraphicsObserver.class);
+        TankGraphicsObserver tankGraphicsObserver = context.getBean(TankGraphicsObserver.class);
+        playerController = context.getBean(PlayerController.class);
+        aiController = context.getBean(AIController.class);
 
-        //LevelData levelData = levelGenerator.generate();
-        LevelData levelData = fileLevelGenerator.generate();
-
-        level = levelData.getLevel();
-        Tank playerTank = levelData.getPlayerTank();
-        List<Tank> enemyTanks = levelData.getEnemyTanks();
-
-        levelGraphics = new LevelGraphics(level, batch);
-        BulletGraphicsObserver bulletGraphicsObserver = new BulletGraphicsObserver(levelGraphics);
-        TankGraphicsObserver tankGraphicsObserver = new TankGraphicsObserver(levelGraphics);
         level.addListener(Bullet.class, bulletGraphicsObserver);
         level.addListener(Tank.class, tankGraphicsObserver);
-
-        playerController = new PlayerController(playerTank);
-        aiController = new AIController(enemyTanks);
-
-        
     }
 
     @Override
