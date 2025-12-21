@@ -40,10 +40,9 @@ public class PlayerController {
             commands.add(new MoveCommand(tank, Directions.RIGHT));
         }
 
-        // стрельба
-        // if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-        //     commands.add(new ShootCommand(tank));
-        // }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            commands.add(new ShootCommand(tank));
+        }
         
         if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             commands.add(new ToggleHealthCommand());

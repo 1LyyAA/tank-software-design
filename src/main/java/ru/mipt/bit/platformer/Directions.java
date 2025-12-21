@@ -27,4 +27,14 @@ public enum Directions {
         int index = (int) (Math.random() * directions.length);
         return directions[index];
     }
+
+    public static Directions fromRotation(float rotation) {
+        for (Directions direction : Directions.values()) {
+            if (direction.rotation == rotation) {
+                return direction;
+            }
+        }
+        return null; // or throw an exception if preferred
+    }
+    
 }

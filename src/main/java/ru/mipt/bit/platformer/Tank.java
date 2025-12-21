@@ -12,6 +12,7 @@ public class Tank implements GameObject {
     private float TankMovementProggress = 1f;
     private Level level;
     private int HitPoints = 70;
+    
 
     public static Tank makeTankAtTile(Level level, GridPoint2 coordinates) {
         return new Tank(level, coordinates);
@@ -31,6 +32,12 @@ public class Tank implements GameObject {
 
     public boolean isMoving() {
         return !isEqual(TankMovementProggress, 1f);
+    }
+
+    public Bullet shoot() {
+        Bullet bullet = new Bullet(getCoordinates(), getTankRotation());
+        level.addObject(bullet);
+        return bullet;
     }
 
     public void tryMove(Directions direction) {
@@ -78,8 +85,6 @@ public class Tank implements GameObject {
     @Override
     public void update(float deltaTime) {
         // обновляем прогресс движения от 0 до 1
-
-        
         TankMovementProggress = continueProgress(TankMovementProggress, deltaTime, TankSpeed);
         // если достигли цели, фиксируем координаты
         if (!isMoving()) {
