@@ -25,6 +25,10 @@ public class BulletGraphics implements Graphics {
 
     @Override
     public void render(Batch batch) {
+        // if (!bullet.isActive()) {
+        //     return;
+        // }
+        
         this.tileMovement.moveRectangleBetweenTileCenters(bulletRectangle, bullet.getCoordinates(), 
                                                         bullet.getDestinationCoordinates(), 
                                                         bullet.getMovementProgress());
@@ -33,7 +37,6 @@ public class BulletGraphics implements Graphics {
 
     @Override
     public void dispose() {
-        // Dispose of any resources if necessary
         bulletTexture.dispose();
     }
 

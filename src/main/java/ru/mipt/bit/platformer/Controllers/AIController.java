@@ -23,7 +23,7 @@ public class AIController {
     //         }
     //     }
 
-    //     return null; // ничего не делает
+    //     return null;
     // }
 
     public ArrayList<Command> pollCommands() {
@@ -33,6 +33,13 @@ public class AIController {
                 commands.add(new MoveCommand(npc,  Directions.random()));
             }
         }
+
+        for (Tank npc : npcTanks) {
+            if (Math.random() < 0.01) {
+                commands.add(new ru.mipt.bit.platformer.Commands.ShootCommand(npc));
+            }
+        }
+        
         return commands;
     }
 }

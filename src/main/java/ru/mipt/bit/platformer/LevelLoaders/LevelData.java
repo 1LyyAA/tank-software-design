@@ -5,10 +5,6 @@ import java.util.List;
 import ru.mipt.bit.platformer.Level;
 import ru.mipt.bit.platformer.Tank;
 
-/**
- * Класс-контейнер для данных уровня.
- * Возвращается из LevelBuilder и содержит все необходимые игровые объекты.
- */
 public class LevelData {
     private final Level level;
     private final Tank playerTank;

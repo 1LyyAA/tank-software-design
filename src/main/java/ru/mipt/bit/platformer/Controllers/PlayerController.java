@@ -19,10 +19,6 @@ public class PlayerController {
         this.tank = tank;
     }
     
-    /**
-     * Проверяет нажатые клавиши и двигает танк.
-     * Вызывается каждый кадр для поддержки удержания клавиш.
-     */
     public List<Command> pollCommands() {
         List<Command> commands = new ArrayList<>();
 

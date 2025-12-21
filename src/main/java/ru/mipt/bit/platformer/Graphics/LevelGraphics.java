@@ -37,6 +37,11 @@ public class LevelGraphics {
     }
 
     public void renderObjects(Batch batch) {
+        while (graphics.size() < level.getObjects().size()) {
+            GameObject newObject = level.getObjects().get(graphics.size());
+            graphics.add(graphicsFactory.createGraphicsFor(newObject));
+        }
+        
         for (Graphics graphic : graphics) {
             graphic.render(batch);
         }
