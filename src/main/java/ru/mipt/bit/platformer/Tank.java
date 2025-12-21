@@ -3,6 +3,8 @@ import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 import com.badlogic.gdx.math.GridPoint2;
 
+import ru.mipt.bit.platformer.Observers.*;
+
 
 public class Tank implements GameObject {
     private GridPoint2 Coordinates;
@@ -41,10 +43,16 @@ public class Tank implements GameObject {
     }
     public void takeDamage() {
         HitPoints -= 25;
-        if (HitPoints < 0) {
+        if (HitPoints <= 0) {
             HitPoints = 0;
+            for (Observer<?> observer : level.getObserversFor(Tank.class)) {
+                TankGraphicsObserver obs = (TankGraphicsObserver) observer;
+                obs.onRemove(this);
+            }
+            level.removeObject(this);
         }
     }
+
     public void tryMove(Directions direction) {
         if (isMoving() || direction == null) {
             return;

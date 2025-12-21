@@ -2,12 +2,18 @@ package ru.mipt.bit.platformer;
 
 import com.badlogic.gdx.math.GridPoint2;
 
-import ru.mipt.bit.platformer.Observers.Observer;
+import ru.mipt.bit.platformer.Observers.*;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
+
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 
-public class Bullet implements GameObject, Observable {
+public class Bullet implements GameObject{
     
     private Level level;
     private GridPoint2 Coordinates;
@@ -31,11 +37,11 @@ public class Bullet implements GameObject, Observable {
             Coordinates.x + direction.dx,
             Coordinates.y + direction.dy
         );
-    }
-
-    @Override
-    public <T extends GameObject> void addListener(Class<T> type, Observer<? super T> observer) {
-        // Implementation for adding an observer
+        
+        for (Observer<?> observer : level.getObserversFor(Bullet.class)) {
+            BulletGraphicsObserver obs = (BulletGraphicsObserver) observer;
+            obs.onCreate(this);
+        }
     }
 
     @Override
@@ -45,6 +51,12 @@ public class Bullet implements GameObject, Observable {
             return;
         }
         this.isAlive = !level.getCollisionManager().checkBulletCollisions(DestinationCoordinates);
+        if (!isAlive) {
+            for (Observer<?> observer : level.getObserversFor(Bullet.class)) {
+                BulletGraphicsObserver obs = (BulletGraphicsObserver) observer;
+                obs.onRemove(this);
+            }
+        }
     }
 
     @Override

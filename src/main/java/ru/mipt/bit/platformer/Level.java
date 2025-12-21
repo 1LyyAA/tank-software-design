@@ -2,18 +2,25 @@ package ru.mipt.bit.platformer;
 
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.GridPoint2;
+
+import ru.mipt.bit.platformer.Observers.Observer;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 
-public class Level {
+public class Level implements Observable {
+    private final Map<Class<?>, List<Observer<?>>> observers = new HashMap<>();
     private final TiledMap map;
     private final TiledMapTileLayer groundLayer;
 
     private List<GameObject> objects = new ArrayList<>();
+    private List<GameObject> objectsToRemove = new ArrayList<>();
 
     private CollisionManager collisionManager;
     
@@ -28,6 +35,19 @@ public class Level {
 
     public TiledMap getMap() {
         return map;
+    }
+
+    public void removeObject(GameObject object) {
+        objectsToRemove.add(object);
+    }
+
+    public void removeObjectsMarkedForRemoval() {
+        objects.removeAll(objectsToRemove);
+        objectsToRemove.clear();
+    }
+
+    public <T extends GameObject> void addListener(Class<T> type, Observer<? super T> observer) {
+        observers.computeIfAbsent(type, k -> new ArrayList<>()).add(observer);
     }
 
     public TiledMapTileLayer getGroundLayer() {
@@ -53,4 +73,10 @@ public class Level {
     public void setCollisionManager(CollisionManager collisionManager) {
         this.collisionManager = collisionManager;
     }
+
+    public List<Observer<?>> getObserversFor(Class<?> type) {
+        return observers.getOrDefault(type, new ArrayList<>());
+    }
+
+    
 }

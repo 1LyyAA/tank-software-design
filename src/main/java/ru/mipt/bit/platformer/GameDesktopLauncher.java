@@ -12,6 +12,8 @@ import ru.mipt.bit.platformer.Graphics.LevelGraphics;
 import ru.mipt.bit.platformer.LevelLoaders.FileLevelGenerator;
 import ru.mipt.bit.platformer.LevelLoaders.LevelData;
 import ru.mipt.bit.platformer.LevelLoaders.RandomLevelGenerator;
+import ru.mipt.bit.platformer.Observers.*;
+
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +45,15 @@ public class GameDesktopLauncher implements ApplicationListener {
         List<Tank> enemyTanks = levelData.getEnemyTanks();
 
         levelGraphics = new LevelGraphics(level, batch);
+        BulletGraphicsObserver bulletGraphicsObserver = new BulletGraphicsObserver(levelGraphics);
+        TankGraphicsObserver tankGraphicsObserver = new TankGraphicsObserver(levelGraphics);
+        level.addListener(Bullet.class, bulletGraphicsObserver);
+        level.addListener(Tank.class, tankGraphicsObserver);
+
         playerController = new PlayerController(playerTank);
         aiController = new AIController(enemyTanks);
+
+        
     }
 
     @Override
@@ -63,6 +72,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         for (GameObject object : level.getObjects()) {
             object.update(deltaTime);
         }
+        level.removeObjectsMarkedForRemoval();
         
         levelGraphics.renderMap();
         batch.begin();
