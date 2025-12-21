@@ -26,11 +26,11 @@ public class RandomLevelGenerator implements LevelGenerator {
     @Override
     public LevelData generate() {
         String[] Lvl = makeRandomLevelLayout();
-        return generateLvl(Lvl);
+        return generateLvl(Lvl, tmxFilePath);
     }
 
-    private LevelData generateLvl(String[] Lvl) {
-        Level level = new Level(tmxFilePath);
+    private LevelData generateLvl(String[] Lvl, String tmxFilePath) {
+        Level level = new Level();
         List<GameObject> objects = new ArrayList<>();
         Tank playerTank = null;
         List<Tank> enemyTanks = new ArrayList<>();
@@ -54,7 +54,7 @@ public class RandomLevelGenerator implements LevelGenerator {
         }
 
         level.addObjects(objects);
-        return new LevelData(level, playerTank, enemyTanks);
+        return new LevelData(level, playerTank, enemyTanks, tmxFilePath);
     }
 
     private String[] makeRandomLevelLayout() {

@@ -7,6 +7,9 @@ import java.util.Map;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.maps.MapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Interpolation;
 
 import ru.mipt.bit.platformer.GameObject;
@@ -16,19 +19,24 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class LevelGraphics {
     Level level;
+    private final TiledMap map;
+    private final TiledMapTileLayer groundLayer;
     private MapRenderer levelRenderer;
     private Map<GameObject, Graphics> graphics;
     private GraphicsFactory graphicsFactory;
     private TileMovement tileMovement;
 
-    public LevelGraphics(Level level, Batch batch) {
+    public LevelGraphics(Level level, String tmxPath, Batch batch) {
         this.level = level;
+        
+        this.map = new TmxMapLoader().load(tmxPath);
+        this.groundLayer = (TiledMapTileLayer) map.getLayers().get(0);
 
-        this.levelRenderer = createSingleLayerMapRenderer(level.getMap(), batch);
+        this.levelRenderer = createSingleLayerMapRenderer(map, batch);
 
-        this.tileMovement = new TileMovement(level.getGroundLayer(), Interpolation.smooth);
+        this.tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
-        this.graphicsFactory = new GraphicsFactory(level.getGroundLayer(), tileMovement);
+        this.graphicsFactory = new GraphicsFactory(groundLayer, tileMovement);
 
         this.graphics = new HashMap<>();
 

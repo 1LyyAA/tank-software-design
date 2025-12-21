@@ -37,8 +37,8 @@ public class SpringConfig {
     }
 
     @Bean
-    public LevelGraphics levelGraphics(Level level, Batch batch) {
-        return new LevelGraphics(level, batch);
+    public LevelGraphics levelGraphics(Level level, LevelData levelData, Batch batch) {
+        return new LevelGraphics(level, levelData.getTmxFilePath(), batch);
     }
 
     @Bean
