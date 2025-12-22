@@ -53,22 +53,36 @@ public class GameDesktopLauncher implements ApplicationListener {
 
         float deltaTime = Gdx.graphics.getDeltaTime();
 
-        ArrayList<Command> commands = new ArrayList<>();
-        commands.addAll(playerController.pollCommands());
-        commands.addAll(aiController.pollCommands());
-        for (Command command : commands) {
-            command.execute();
-        }
+        processCommands();
+        updateWorld();
+        renderWorld();
+    }
 
-        for (GameObject object : level.getObjects()) {
-            object.update(deltaTime);
-        }
-        level.removeObjectsMarkedForRemoval();
-        
+    private void renderWorld() {
         levelGraphics.renderMap();
         batch.begin();
         levelGraphics.renderObjects(batch);
         batch.end();
+    }
+
+    private void processCommands() {
+        for (Command command : collectCommands()) {
+            command.execute();
+        }
+    }
+
+    private List<Command> collectCommands() {
+        List<Command> commands = new ArrayList<>();
+        commands.addAll(playerController.pollCommands());
+        commands.addAll(aiController.pollCommands());
+        return commands;
+    }
+
+    private void updateWorld(float deltaTime) {
+        for (GameObject object : level.getObjects()) {
+            object.update(deltaTime);
+        }
+        level.removeObjectsMarkedForRemoval();
     }
 
     private void clearScreen() {
