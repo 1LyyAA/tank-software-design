@@ -12,7 +12,7 @@ import ru.mipt.bit.platformer.Commands.MoveCommand;
 import ru.mipt.bit.platformer.Commands.ShootCommand;
 import ru.mipt.bit.platformer.Graphics.ToggleHealthCommand;
 
-public class PlayerController {
+public class PlayerController implements Controller{
     private Tank tank;
 
     public PlayerController(Tank tank) {

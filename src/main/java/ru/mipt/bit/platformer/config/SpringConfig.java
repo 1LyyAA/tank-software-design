@@ -62,4 +62,14 @@ public class SpringConfig {
     public AIController aiController(LevelData levelData) {
         return new AIController(levelData.getEnemyTanks());
     }
+
+    @Bean
+    public List<Controller> controllers(PlayerController playerController, AIController aiController) {
+        return List.of(playerController, aiController);
+    }
+
+    @Bean
+    public List<Observer> observers(BulletGraphicsObserver bulletGraphicsObserver, TankGraphicsObserver tankGraphicsObserver) {
+        return List.of(bulletGraphicsObserver, tankGraphicsObserver);
+    }
 }

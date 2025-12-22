@@ -20,39 +20,50 @@ import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class GameDesktopLauncher implements ApplicationListener {
     private Batch batch;
     private Level level;
     private LevelGraphics levelGraphics;
+    private List<Controller> controllerList;
+    private List<Observer> observerList;
 
-    private PlayerController playerController;
-    private AIController aiController;
+    public GameDesktopLauncher(Batch batch,
+                               Level level,
+                               LevelGraphics levelGraphics,
+                               List<Controller> controllerList,
+                               List<Observer> observerList) {
+        this.batch = batch;
+        this.level = level;
+        this.levelGraphics = levelGraphics;
+        this.controllerList = controllerList;
+        this.observerList = observerList;
+    }
 
-
+    @PostConstruct
+    private void init() {
+        addObserversToLevel();
+    }
 
     @Override
     public void create() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+        //
+    }
 
-        batch = context.getBean(Batch.class);
-        level = context.getBean(Level.class);
-        levelGraphics = context.getBean(LevelGraphics.class);
-        BulletGraphicsObserver bulletGraphicsObserver = context.getBean(BulletGraphicsObserver.class);
-        TankGraphicsObserver tankGraphicsObserver = context.getBean(TankGraphicsObserver.class);
-        playerController = context.getBean(PlayerController.class);
-        aiController = context.getBean(AIController.class);
 
-        level.addListener(Bullet.class, bulletGraphicsObserver);
-        level.addListener(Tank.class, tankGraphicsObserver);
+
+    private void addObserversToLevel() {
+        for (Observer observer : observerList) {
+            for (Class<?> observedClass : observer.getObservedClasses()) {
+                level.addListener(observedClass, observer);
+            }
+        }
     }
 
     @Override
     public void render() {
         clearScreen();
-
         float deltaTime = Gdx.graphics.getDeltaTime();
-
         processCommands();
         updateWorld();
         renderWorld();
@@ -73,8 +84,10 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     private List<Command> collectCommands() {
         List<Command> commands = new ArrayList<>();
-        commands.addAll(playerController.pollCommands());
-        commands.addAll(aiController.pollCommands());
+        for (Controller controller : controllerList) {
+            commands.addAll(controller.pollCommands());
+        }
+
         return commands;
     }
 
@@ -113,9 +126,12 @@ public class GameDesktopLauncher implements ApplicationListener {
     }
 
     public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(ru.mipt.bit.platformer.config.SpringConfig.class);
+        GameDesktopLauncher launcher = context.getBean(GameDesktopLauncher.class);
+
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         // level width: 10 tiles x 128px, height: 8 tiles x 128px
         config.setWindowedMode(1280, 1024);
-        new Lwjgl3Application(new GameDesktopLauncher(), config);
+        new Lwjgl3Application(launcher, config);
     }
 }

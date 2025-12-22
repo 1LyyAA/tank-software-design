@@ -21,4 +21,9 @@ public class BulletGraphicsObserver implements Observer<Bullet> {
     public void onRemove(Bullet bullet) {
         levelGraphics.removeFor(bullet);
     }
+
+    @Override
+    public List<Class<?>> getObservedClasses() {
+        return List.of(Bullet.class);
+    }
 }
