@@ -20,7 +20,6 @@ import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class GameDesktopLauncher implements ApplicationListener {
     private Batch batch;
     private Level level;
@@ -40,14 +39,9 @@ public class GameDesktopLauncher implements ApplicationListener {
         this.observerList = observerList;
     }
 
-    @PostConstruct
-    private void init() {
-        addObserversToLevel();
-    }
-
     @Override
     public void create() {
-        //
+        addObserversToLevel();
     }
 
 
@@ -65,7 +59,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         clearScreen();
         float deltaTime = Gdx.graphics.getDeltaTime();
         processCommands();
-        updateWorld();
+        updateWorld(deltaTime);
         renderWorld();
     }
 

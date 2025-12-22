@@ -72,4 +72,13 @@ public class SpringConfig {
     public List<Observer> observers(BulletGraphicsObserver bulletGraphicsObserver, TankGraphicsObserver tankGraphicsObserver) {
         return List.of(bulletGraphicsObserver, tankGraphicsObserver);
     }
+
+    @Bean
+    public GameDesktopLauncher gameDesktopLauncher(Batch batch,
+                                                   Level level,
+                                                   LevelGraphics levelGraphics,
+                                                   List<Controller> controllers,
+                                                   List<Observer> observers) {
+        return new GameDesktopLauncher(batch, level, levelGraphics, controllers, observers);
+    }
 }
