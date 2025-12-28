@@ -5,7 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.mipt.bit.platformer.Commands.Command;
 import ru.mipt.bit.platformer.Controllers.*;
 import ru.mipt.bit.platformer.Graphics.LevelGraphics;
@@ -13,71 +14,82 @@ import ru.mipt.bit.platformer.LevelLoaders.FileLevelGenerator;
 import ru.mipt.bit.platformer.LevelLoaders.LevelData;
 import ru.mipt.bit.platformer.LevelLoaders.RandomLevelGenerator;
 import ru.mipt.bit.platformer.Observers.*;
+import ru.mipt.bit.platformer.config.SpringConfig;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class GameDesktopLauncher implements ApplicationListener {
     private Batch batch;
     private Level level;
     private LevelGraphics levelGraphics;
+    private List<Controller> controllerList;
+    private List<Observer> observerList;
 
-    private PlayerController playerController;
-    private AIController aiController;
-
-
+    public GameDesktopLauncher(Batch batch,
+                               Level level,
+                               LevelGraphics levelGraphics,
+                               List<Controller> controllerList,
+                               List<Observer> observerList) {
+        this.batch = batch;
+        this.level = level;
+        this.levelGraphics = levelGraphics;
+        this.controllerList = controllerList;
+        this.observerList = observerList;
+    }
 
     @Override
     public void create() {
-        batch = new SpriteBatch();
+        addObserversToLevel();
+    }
 
-        RandomLevelGenerator levelGenerator = new RandomLevelGenerator("level.tmx");
-        FileLevelGenerator fileLevelGenerator = new FileLevelGenerator("level.tmx",
-                "src/main/resources/images/Level.txt");
 
-        //LevelData levelData = levelGenerator.generate();
-        LevelData levelData = fileLevelGenerator.generate();
 
-        level = levelData.getLevel();
-        Tank playerTank = levelData.getPlayerTank();
-        List<Tank> enemyTanks = levelData.getEnemyTanks();
-
-        levelGraphics = new LevelGraphics(level, batch);
-        BulletGraphicsObserver bulletGraphicsObserver = new BulletGraphicsObserver(levelGraphics);
-        TankGraphicsObserver tankGraphicsObserver = new TankGraphicsObserver(levelGraphics);
-        level.addListener(Bullet.class, bulletGraphicsObserver);
-        level.addListener(Tank.class, tankGraphicsObserver);
-
-        playerController = new PlayerController(playerTank);
-        aiController = new AIController(enemyTanks);
-
-        
+    private void addObserversToLevel() {
+        for (Observer observer : observerList) {
+            for (Class<?> observedClass : observer.getObservedClasses()) {
+                level.addListener(observedClass, observer);
+            }
+        }
     }
 
     @Override
     public void render() {
         clearScreen();
-
         float deltaTime = Gdx.graphics.getDeltaTime();
+        processCommands();
+        updateWorld(deltaTime);
+        renderWorld();
+    }
 
-        ArrayList<Command> commands = new ArrayList<>();
-        commands.addAll(playerController.pollCommands());
-        commands.addAll(aiController.pollCommands());
-        for (Command command : commands) {
-            command.execute();
-        }
-
-        for (GameObject object : level.getObjects()) {
-            object.update(deltaTime);
-        }
-        level.removeObjectsMarkedForRemoval();
-        
+    private void renderWorld() {
         levelGraphics.renderMap();
         batch.begin();
         levelGraphics.renderObjects(batch);
         batch.end();
+    }
+
+    private void processCommands() {
+        for (Command command : collectCommands()) {
+            command.execute();
+        }
+    }
+
+    private List<Command> collectCommands() {
+        List<Command> commands = new ArrayList<>();
+        for (Controller controller : controllerList) {
+            commands.addAll(controller.pollCommands());
+        }
+
+        return commands;
+    }
+
+    private void updateWorld(float deltaTime) {
+        for (GameObject object : level.getObjects()) {
+            object.update(deltaTime);
+        }
+        level.removeObjectsMarkedForRemoval();
     }
 
     private void clearScreen() {
@@ -108,9 +120,12 @@ public class GameDesktopLauncher implements ApplicationListener {
     }
 
     public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(ru.mipt.bit.platformer.config.SpringConfig.class);
+        GameDesktopLauncher launcher = context.getBean(GameDesktopLauncher.class);
+
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         // level width: 10 tiles x 128px, height: 8 tiles x 128px
         config.setWindowedMode(1280, 1024);
-        new Lwjgl3Application(new GameDesktopLauncher(), config);
+        new Lwjgl3Application(launcher, config);
     }
 }

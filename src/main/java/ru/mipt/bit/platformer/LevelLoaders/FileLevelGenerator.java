@@ -36,7 +36,7 @@ public class FileLevelGenerator implements LevelGenerator {
     }
 
     private static LevelData generateLvl(String tmxFilePath, String[] Lvl) {
-        Level level = new Level(tmxFilePath);
+        Level level = new Level();
         List<GameObject> objects = new ArrayList<>();
         Tank playerTank = null;
         List<Tank> enemyTanks = new ArrayList<>();
@@ -60,7 +60,7 @@ public class FileLevelGenerator implements LevelGenerator {
         }
 
         level.addObjects(objects);
-        return new LevelData(level, playerTank, enemyTanks);
+        return new LevelData(level, playerTank, enemyTanks, tmxFilePath);
     }
 
     private static String[] invertLvl(String[] invertedLvl) {

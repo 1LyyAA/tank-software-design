@@ -9,7 +9,7 @@ import ru.mipt.bit.platformer.Commands.Command;
 import ru.mipt.bit.platformer.Commands.MoveCommand;
 import ru.mipt.bit.platformer.Commands.ShootCommand;
 
-public class AIController {
+public class AIController implements Controller{
     private final List<Tank> npcTanks;
 
     public AIController(List<Tank> tanks) {

@@ -21,4 +21,8 @@ public class TankGraphicsObserver implements Observer<Tank> {
     public void onRemove(Tank tank) {
         levelGraphics.removeFor(tank);
     }
+    @Override
+    public List<Class<?>> getObservedClasses() {
+        return List.of(Tank.class);
+    }
 }

@@ -9,11 +9,13 @@ public class LevelData {
     private final Level level;
     private final Tank playerTank;
     private final List<Tank> enemyTanks;
+    private final String tmxFilePath;
 
-    public LevelData(Level level, Tank playerTank, List<Tank> enemyTanks) {
+    public LevelData(Level level, Tank playerTank, List<Tank> enemyTanks, String tmxFilePath) {
         this.level = level;
         this.playerTank = playerTank;
         this.enemyTanks = enemyTanks;
+        this.tmxFilePath = tmxFilePath;
     }
 
     public Level getLevel() {
@@ -26,5 +28,9 @@ public class LevelData {
 
     public List<Tank> getEnemyTanks() {
         return enemyTanks;
+    }
+
+    public String getTmxFilePath() {
+        return tmxFilePath;
     }
 }
